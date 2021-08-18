@@ -12,6 +12,7 @@ void registr();
 void forgot();
 
 
+
 int main() {
 
     int choice;
@@ -53,14 +54,32 @@ void registr() {
     cin>>regpass;
 
 
-    ofstream reg("database.txt",ios::app);
-    reg<<reguser<<" "<<regpass<<endl;
-    system("clear");
-    cout<<"Registration is successfull\n";
-    main();
+    //we want to check username whether it exists in the database already. 
+    string user3,pass3;
+    int existuser=0;
+    ifstream checkusername("database.txt");
+    while (checkusername>>user3>>pass3) {
+        if (user3 == reguser) {
+            existuser = 1;
+            break;
+        }
+    }
+    checkusername.close();
+    if (existuser == 1) {
+        cout<<"Username already exist. Press any key to return to main menu.";
+        cin.get();
+        cin.get();
+        main();
+    } else {
+        ofstream reg("database.txt",ios::app);
+        reg<<reguser<<" "<<regpass<<endl;
+        system("clear");
+        cout<<"Registration is successfull\n";
+        main();
+    }
+
 
 }
-
 void login() {
 
     int exist = 0;
@@ -94,13 +113,15 @@ void login() {
     }
 }
 
+
+
 void forgot() {
     int ch;
     system("clear");
-    cout<<"1. Search your account by username";
-    cout<<"\n2. Search your account by password";
+    cout<<"1. Search your account by username ";
+    cout<<"\n2. Search your account by password ";
     cout<<"\n3. Return to Main menu";
-    cout<<"\n Enter your choice";
+    cout<<"\n Enter your choice:  ";
     cin>>ch;
 
     switch(ch) {
@@ -136,7 +157,7 @@ void forgot() {
         case 2: {
             int exi = 0;
             string searchpass, su2,sp2;
-            cout<<"Enter the remembered password";
+            cout<<"Enter the remembered password:  ";
             cin>>searchpass;
             ifstream searchp("database.txt");
             while (searchp>>su2>>sp2) {
